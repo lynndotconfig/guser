@@ -1,0 +1,13 @@
+*.db
+*.sqlite3
+.log
+npm-debug.log*
+
+node_modules
+/build
+dist
+
+!.gitignore
+!.babelrc
+!.eslintrc
+!.eslintignore
