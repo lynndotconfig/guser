@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package usermanage;
+
+service UserManage {
+    rpc GetUser(UserSearch) returns (User);
+    // rpc ListUser(Ids) returns (Users);
+    // rpc CreateUser(UserInfo) returns (User);
+    // rpc DeleteUser(Ids) returns (User);
+}
+
+message User {
+   int32 id = 1;
+   string name = 2;
+   optional string email = 3;
+//    optional string ou = 4;
+   optional string password = 5;
+//    optional float created_at = 6;
+//    optional float updated_at = 7;
+}
+
+message UserSearch {
+   required string name = 1;
+}
+
+message UserInfo {
+    required string name = 1;
+    optional string email = 2;
+    optional string ou = 3;
+    optional string password = 4;
+}
+
+message Ids {
+    repeated int32 ids = 1;
+}
+
+message Users {
+    repeated User users = 1;
+}
