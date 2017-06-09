@@ -4,16 +4,16 @@ package usermanage;
 
 service UserManage {
     rpc GetUser(UserSearch) returns (User);
+    rpc CreateUser(UserInfo) returns (User);
+    rpc DeleteUser(UserSearch) returns (UserDeleteResult);
     // rpc ListUser(Ids) returns (Users);
-    // rpc CreateUser(UserInfo) returns (User);
-    // rpc DeleteUser(Ids) returns (User);
 }
 
 message User {
    int32 id = 1;
    string name = 2;
    optional string email = 3;
-//    optional string ou = 4;
+   optional string ou = 4;
    optional string password = 5;
 //    optional float created_at = 6;
 //    optional float updated_at = 7;
@@ -28,6 +28,11 @@ message UserInfo {
     optional string email = 2;
     optional string ou = 3;
     optional string password = 4;
+}
+
+message UserDeleteResult {
+    required string status = 1;
+    required string name = 2;
 }
 
 message Ids {

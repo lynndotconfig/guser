@@ -27,6 +27,7 @@ function forgeUser(filter, cb) {
             id: attr.id,
             name: attr.name,
             email: attr.email,
+            ou: attr.ou,
             password: attr.password
         }
         console.log(typeof user.id)
@@ -48,10 +49,43 @@ function getUser(call, callback) {
     })
 }
 
+function createUser(call, callback) {
+    var user = {
+        name: call.request.name,
+        email: call.request.email,
+        ou: call.request.ou,
+        password: call.request.password
+    }
+    new User(user).save().then(function (row) {
+        let ret = row.attributes
+        let retUser = {
+            id: ret.id,
+            name: ret.name,
+            email: ret.email,
+            ou: ret.ou,
+            password: ret.password
+        }
+        callback(null, retUser)
+    })
+}
+
+function deleteUser(call, callback) {
+    let name = call.request.name
+    User.where({ name: name }).destroy().then(function (row) {
+        let ret = {
+            status: 'ok',
+            name: name
+        }
+        callback(null, ret)
+    })
+}
+
 function getServer() {
     var server = new grpc.Server()
     server.addService(usermanage.UserManage.service, {
-        getUser: getUser
+        getUser: getUser,
+        createUser: createUser,
+        deleteUser: deleteUser
     })
     return server
 }

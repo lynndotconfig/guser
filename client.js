@@ -24,8 +24,40 @@ function runGetUser() {
     })
 }
 
+function runCreateUser() {
+    let requestUser = {
+        name: 'margaret',
+        email: 'margaret@wangsu.com',
+        ou: 'OU=CTXUsers,OU=Citrix,DC=dev1,DC=com',
+        password: '12345'
+    }
+    client.createUser(requestUser, function (err, user) {
+        if(err) {
+            console.log('err:', err)
+            return
+        } else {
+            console.log('created: ', user)
+        }
+    })
+}
+
+function runDeleteUser() {
+    let userSearch = {
+        name: 'margaret'
+    }
+    client.deleteUser(userSearch, function (err, user) {
+        if(err) {
+            console.log('err: ', err)
+            return
+        } else {
+            console.log('return: ', user)
+        }
+    })
+}
 function main() {
-    runGetUser()
+    // runGetUser()
+    // runCreateUser()
+    runDeleteUser()
 }
 
 if(require.main === module ) {
