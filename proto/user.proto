@@ -3,10 +3,12 @@ syntax = "proto3";
 package usermanage;
 
 service UserManage {
-    rpc GetUser(UserSearch) returns (User);
-    rpc CreateUser(UserInfo) returns (User);
-    rpc DeleteUser(UserSearch) returns (UserDeleteResult);
-    // rpc ListUser(Ids) returns (Users);
+    rpc GetUser(UserSearch) returns (User) {};
+    rpc CreateUser(UserInfo) returns (User) {};
+    rpc DeleteUser(UserSearch) returns (UserDeleteResult) {};
+    rpc ListUser(Ids) returns (stream User) {};
+    rpc SearchUser(stream UserSearch) returns (UserSummary) {};
+    rpc CreateUsers(stream UserInfo) returns (stream User) {};
 }
 
 message User {
@@ -30,6 +32,10 @@ message UserInfo {
     optional string password = 4;
 }
 
+message UserInfos {
+    repeated UserInfo userinfos = 1;
+}
+
 message UserDeleteResult {
     required string status = 1;
     required string name = 2;
@@ -41,4 +47,9 @@ message Ids {
 
 message Users {
     repeated User users = 1;
+}
+
+message UserSummary {
+    int32 count = 1;
+    repeated User users = 2;
 }

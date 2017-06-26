@@ -6,6 +6,7 @@ const proto = {
     root: path.resolve(__dirname, 'proto')
 }
 
+var _ = require('lodash')
 var grpc =  require('grpc')
 var usermanage = grpc.load(proto).usermanage
 var bookshelf = require('./db').bookself
@@ -30,8 +31,8 @@ function forgeUser(filter, cb) {
             ou: attr.ou,
             password: attr.password
         }
-        console.log(typeof user.id)
-        console.log(user)
+        // console.log(typeof user.id)
+        // console.log(user)
         return cb(null, user)
     } )
 }
@@ -80,12 +81,58 @@ function deleteUser(call, callback) {
     })
 }
 
+function listUser(call) {
+    User.fetchAll().then(function (data) {
+        let models = data.models
+        _.each(models, function (item) {
+            let ret = item.attributes
+            let retUser = {
+                id: ret.id,
+                name: ret.name,
+                email: ret.email,
+                ou: ret.ou,
+                password: ret.password
+            }
+            console.log(retUser)
+            call.write(retUser)
+        })
+        call.end()
+    })
+}
+
+function searchUser(call, callback) {
+    var count = 0
+    var users = []
+    call.on('data', function (searchName) {
+        console.log('request name: ', searchName)
+        forgeUser({name: searchName.name }, function (err, data) {
+            if(err) { return}
+            else {
+                count += 1
+                console.log('in searchUser: ', data)
+                users.push(data)
+                // console.log('in users: ', users)
+            }
+        })
+    })
+
+    call.on('end', function () {
+        console.log('in end ')
+        callback(null, {
+            count: count,
+            users: users
+        })
+    })
+}
+
 function getServer() {
     var server = new grpc.Server()
     server.addService(usermanage.UserManage.service, {
         getUser: getUser,
         createUser: createUser,
-        deleteUser: deleteUser
+        deleteUser: deleteUser,
+        listUser: listUser,
+        searchUser: searchUser
     })
     return server
 }

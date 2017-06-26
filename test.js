@@ -26,6 +26,17 @@ var User = require('./model').User
 //     console.log(err)
 // })
 
-User.where({name: 'Dixon'}).destroy().then(function (row) {
-    console.log(row)
+// User.where({name: 'Dixon'}).destroy().then(function (row) {
+//     console.log(row)
+// })
+
+User.fetchAll().then(function (data) {
+    // data.map(function (item) {
+    //     console.log(item.attributes)
+    // })
+    users = data.filter(function (u, i) {
+        if (u.get('name') === 'margaret') return true
+    })
+    console.log(users)
 })
+
